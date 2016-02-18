@@ -1,0 +1,332 @@
+
+<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Example 1 - Simple</title>
+
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="bower_components/angular-color-picker/angularjs-color-picker.min.css" />
+		<link rel="stylesheet" href="css/creative.css" type="text/css">
+
+		<script src="js/jquery.js"></script>
+		<script src="js/FileSaver.js"></script>
+		<script src="bower_components/angular/angular.min.js"></script>
+		<script src="bower_components/tinycolor/dist/tinycolor-min.js"></script>
+		<script src="bower_components/angular-color-picker/angularjs-color-picker.min.js"></script>
+		<script src="bower_components/jszip/dist/jszip.min.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+	
+ </head>
+
+
+
+
+<div ng-app="myApp" ng-controller="myCtrl">
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<h1>
+						Let's build
+					</h1>
+					
+
+					<div class="row">
+						<div class="col-md-6">
+							<h2>
+								Simply choose a template, customize it with your company logo, creative colours and images. Then fill in your business's details. When you're ready, click preview to see what your mobile website will look like on different mobile phones.
+							</h2>
+							<form role="form">
+							
+								<div class="form-group">
+									<label for="CompanyName">
+										Company Name
+									</label>
+									<input type="text" placeholder = "Your company name" ng-change="updateCompanyName()"  class="form-control" id="CompanyName" ng-model="CompanyName"/>
+								</div>
+
+								<div class="form-group">
+									<label for="CompanyName">
+										Sub Text
+									</label>
+									<input type="text" placeholder = "A brief description of your company" ng-change="updateSubText()"  class="form-control" id="SubText" ng-model="SubText"/>
+								</div>
+								
+								<div class="form-group">
+									<label for="Email">
+										Email address
+									</label>
+									<input type="email" placeholder = "mycompany@example.com" ng-change="updateEmail()" class="form-control" id="Email" ng-model="Email"/>
+								</div>
+								
+								<div class="form-group">
+									<label for="Number">
+										Phone Number
+									</label>
+									<input type="tel" placeholder = "+27118885555" ng-change="updateNumber()" class="form-control" id="Number" ng-model="Number" />
+								</div>
+								
+								<div class="form-group">
+									<label for="address">
+										Address
+									</label>
+									  
+									<input type="text" class="form-control" id="Address" ng-autocomplete="Address" details="Addressdetails" options="Addressoptions" />
+								</div>
+								
+								<div class="form-group">
+									<label for="WwwAddress">
+										Website Address
+									</label>
+									<input type="text" placeholder = "http://www.example.com" ng-change="updateWwwAddress()" class="form-control" id="WwwAddress" ng-model="WwwAddress"/>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group col-md-4">
+										<label for="PrimaryColour">
+											Primary Colour
+										</label>
+										<color-picker ng-model="PrimaryColour" color-picker-format="'hex'" ></color-picker>
+									</div>
+									
+									<div class="form-group col-md-4">
+										<label for="SecondaryColour">
+											Secondary Colour
+										</label>
+										<color-picker ng-model="SecondaryColour" color-picker-format="'hex'" ></color-picker>
+									</div>
+									
+									<div class="form-group col-md-4">
+										<label for="TypographyColour">
+											Typography Colour
+										</label>
+										<color-picker ng-model="TypographyColour" color-picker-format="'hex'" ></color-picker>
+									</div>
+								</div>
+								
+								
+								<div class="form-group">
+									 
+									<label for="ImageLogo">
+										Company Logo
+									</label>
+									<input type="file" id="ImageLogo" ng-file-select="onFileSelect($files)" >
+								<!-- 	<input type="file" id="ImageLogo" ng-change="updateCompanyLogo()" ng-model="ImageLogo"/> -->
+									<p class="help-block">
+										Upload your companies logo
+											<div class="progress">
+											  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}"
+											  aria-valuemin="0" aria-valuemax="1" style="{{progresswidth}}">
+											    {{progress}} Complete (success)
+											  </div>
+											</div>
+									</p>
+								</div>
+
+								<button type="button" class="btn btn-block">
+									Save
+								</button> 
+								<button type="button" ng-click="DownloadIframeTemplate()"  class="btn btn-block">
+									Download HTML files 
+								</button>
+								<button type="button" class="btn btn-block">
+									Email HTML files 
+								</button>
+							
+							
+						
+							</form> 
+							
+						</div>
+						<div class="col-md-6">
+							<div class="row">
+							
+								<div id="phone" class="portrait col-md-12" style="margin-top: 80px;">
+									<div id="frame">
+										 <iframe width="100%" height="100%" frameborder="0" id="iframe" src="template1.html"></iframe>
+
+									</div>
+								
+								</div>
+						
+							</div>
+						</div>
+					</div>
+			
+				</div>
+			</div>
+		</div>
+
+</div>
+
+
+	
+<script>
+var app = angular.module('myApp', ['color.picker','ngAutocomplete'],function($compileProvider){
+
+
+  $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|geo|tel):/);
+
+
+});
+
+app.directive("ngFileSelect",function(){
+
+  return {
+    link: function($scope,el){
+      
+      el.bind("change", function(e){
+      
+        $scope.file = (e.srcElement || e.target).files[0];
+        $scope.getFile();
+      })
+      
+    }
+    
+  }
+  
+  
+})
+
+app.controller('myCtrl', function($scope,fileReader) {
+	
+
+   	$scope.Address = '';
+    $scope.Addressoptions = null;
+    $scope.Addressdetails = '';
+
+    $scope.DownloadIframeTemplate = function(){
+    	//Need a way to deduct credits for downloadable files 
+    	var iframehtml = $('#iframe').contents().find("html").html();
+
+    	console.log(iframehtml)
+    	var zip = new JSZip();
+
+
+
+		zip.file("index.html", iframehtml);
+
+
+		var content = zip.generate({type:"blob"});
+		// see FileSaver.js
+		saveAs(content, "example.zip");
+
+    }
+
+
+	$scope.getSaveDetails = function () {
+       var objforsave = {}
+
+       objforsave.CompanyName = $scope.CompanyName 
+       objforsave.SubText = $scope.SubText 
+       objforsave.Email = $scope.Email 
+       objforsave.Number = $scope.Number 
+       objforsave.WwwAddress = $scope.WwwAddress 
+       objforsave.Address = $scope.Address 
+       objforsave.Addressdetails = $scope.Addressdetails 
+       objforsave.PrimaryColour = $scope.PrimaryColour 
+       objforsave.SecondaryColour = $scope.SecondaryColour
+       objforsave.TypographyColour = $scope.TypographyColour
+       console.log(objforsave)
+       alert(objforsave) // Remove this alert and use this object to save against the project for the user/ we would just neeed to find a way to load this up whne it exists already
+    };
+
+
+
+	$scope.getFile = function () {
+        
+        $scope.progress = 0;
+        $scope.progresswidth = 0;
+        fileReader.readAsDataUrl($scope.file, $scope).then(function(result) {
+             
+           	 $scope.imageSrc = result;
+           	 console.log(result)
+           	 document.getElementById('iframe').contentWindow.updateLogo($scope.imageSrc);
+
+        });
+    };
+
+    $scope.$on("fileProgress", function(e, progress) {
+        $scope.progress = progress.loaded / progress.total;
+        $scope.progresswidth =   "width:" + $scope.progress*100 + "%";
+    });
+ 
+
+
+  
+     $scope.updateCompanyName = function() {
+          document.getElementById('iframe').contentWindow.updateCompanyName($scope.CompanyName);
+     };
+
+      $scope.updateSubText = function() {
+          document.getElementById('iframe').contentWindow.updateSubText($scope.SubText);
+     };
+
+     $scope.updateEmail = function() {
+          document.getElementById('iframe').contentWindow.updateEmail($scope.Email);
+     };
+
+      $scope.updateNumber = function() {
+          document.getElementById('iframe').contentWindow.updateNumber($scope.Number);
+     };
+
+     $scope.updateWwwAddress = function() {
+          document.getElementById('iframe').contentWindow.updateWwwAddress($scope.WwwAddress);
+     };
+
+
+    $(document).ready(function() {
+
+   
+
+		     $scope.$watch('PrimaryColour', function(newValue, oldValue) {
+		     	  if(newValue != oldValue){
+
+		     	 		  document.getElementById('iframe').contentWindow.updatePrimaryColour($scope.PrimaryColour);
+		     	  }
+				  
+			 });
+
+
+		     $scope.$watch('SecondaryColour', function(newValue, oldValue) {
+		     	  if(newValue != oldValue){
+
+		     	 		  document.getElementById('iframe').contentWindow.updateSecondaryColour($scope.SecondaryColour);
+		     	  }
+				  
+			 });
+
+
+		     $scope.$watch('TypographyColour', function(newValue, oldValue) {
+		     	  if(newValue != oldValue){
+
+		     	 		  document.getElementById('iframe').contentWindow.updateTypographyColour($scope.TypographyColour);
+		     	  }
+				  
+			 });
+
+		     $scope.$watch('Address', function(newValue, oldValue) {
+		     	  if(newValue != oldValue){
+
+		     	 
+		      	  	document.getElementById('iframe').contentWindow.updateAddress($scope.Address);
+		     	  }
+				  
+			 });
+
+
+		    $scope.$watch('Addressdetails', function(newValue, oldValue) {
+				  if(newValue !== oldValue){
+				  	// http://maps.google.com/maps?q=24.197611,120.780512
+				  console.log(newValue.geometry.location.lat())
+				  var locationuri = "http://maps.google.com/maps?q="+newValue.geometry.location.lat()+","+newValue.geometry.location.lng()
+				  console.log(locationuri)
+				  document.getElementById('iframe').contentWindow.updateMapsLocation(locationuri);
+				  }
+			});
+	});
+
+});
+</script>
+
+<script src="js/upload.js"></script>
+<script src="js/ngAutocomplete.js"></script>
