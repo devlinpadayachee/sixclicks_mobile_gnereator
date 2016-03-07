@@ -47,6 +47,12 @@
           console.log(FIREBASE_URL+'users/'+AuthenticationFactory.getAuth().uid+'/projects/'+projectId);
           var projectObj = $firebaseObject(projectRef);
           return projectObj.$loaded();
+        }, //getProject
+        saveProject: function(project) {
+          var projectRef = new Firebase(FIREBASE_URL+'users/'+AuthenticationFactory.getAuth().uid+'/projects/'+projectId);
+          console.log(FIREBASE_URL+'users/'+AuthenticationFactory.getAuth().uid+'/projects/'+projectId);
+          var projectObj = $firebaseObject(projectRef);
+          return projectObj.$loaded();
         } //getProject
       }; //myObject
 
@@ -96,29 +102,37 @@
         saveAs(content, "example.zip");
       };
 
-      $scope.getSaveDetails = function () {
-        var objforsave = {};
-        objforsave.CompanyName = $scope.CompanyName; 
-        objforsave.SubText = $scope.SubText; 
-        objforsave.Email = $scope.Email; 
-        objforsave.Number = $scope.Number; 
-        objforsave.WwwAddress = $scope.WwwAddress; 
-        objforsave.Address = $scope.Address; 
-        objforsave.Addressdetails = $scope.Addressdetails; 
-        objforsave.PrimaryColour = $scope.PrimaryColour; 
-        objforsave.SecondaryColour = $scope.SecondaryColour;
-        objforsave.TypographyColour = $scope.TypographyColour;
+      $scope.getSaveDetails = function (project) {
+        ProjectFactory.saveProject(project)
+        .then(function(response) {
+          $scope.success = "Project saved successfully";
+        })
+        .catch(function(error) {
+          console.log("An error has occured when attempting to save your project.");
+          $scope.error = error.message;
+        });
+        // var objforsave = {};
+        // objforsave.CompanyName = $scope.CompanyName; 
+        // objforsave.SubText = $scope.SubText; 
+        // objforsave.Email = $scope.Email; 
+        // objforsave.Number = $scope.Number; 
+        // objforsave.WwwAddress = $scope.WwwAddress; 
+        // objforsave.Address = $scope.Address; 
+        // objforsave.Addressdetails = $scope.Addressdetails; 
+        // objforsave.PrimaryColour = $scope.PrimaryColour; 
+        // objforsave.SecondaryColour = $scope.SecondaryColour;
+        // objforsave.TypographyColour = $scope.TypographyColour;
         // console.log(objforsave);
-        alert(objforsave); // Remove this alert and use this object to save against the project for the user/ we would just neeed to find a way to load this up whne it exists already
+        // alert(objforsave); // Remove this alert and use this object to save against the project for the user/ we would just neeed to find a way to load this up whne it exists already
       };
 
       $scope.getFile = function () {
         $scope.progress = 0;
         $scope.progresswidth = 0;
         fileReader.readAsDataUrl($scope.file, $scope).then(function(result) {
-          $scope.imageSrc = result;
+          $scope.project.imageSrc = result;
           // console.log(result)
-          document.getElementById('iframe').contentWindow.updateLogo($scope.imageSrc);
+          document.getElementById('iframe').contentWindow.updateLogo($scope.project.imageSrc);
         });
       };
 
@@ -274,7 +288,7 @@
                   </div>
                 </p>
               </div>
-              <button type="button" class="btn btn-block">
+              <button type="button" class="btn btn-block" ng-click="getSaveDetails(project)">
                 Save
               </button> 
               <button type="button" ng-click="DownloadIframeTemplate()"  class="btn btn-block">
