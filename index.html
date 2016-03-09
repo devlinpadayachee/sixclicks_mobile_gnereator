@@ -8,7 +8,13 @@
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="style.css" />
 	<link rel="stylesheet" href="bower_components/angular-color-picker/angularjs-color-picker.min.css" />
-	<link rel="stylesheet" href="css/creative.css" type="text/css">
+	<!-- <link rel="stylesheet" href="css/creative.css" type="text/css"> -->
+
+  <link rel="stylesheet" href="../../css/bundle.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Halant:300,400" rel="stylesheet" type="text/css">
 
 	<script src="js/jquery.js"></script>
 	<script src="js/FileSaver.js"></script>
@@ -44,16 +50,31 @@
       var myObject = {
         getProject: function(projectId) {
           var projectRef = new Firebase(FIREBASE_URL+'users/'+AuthenticationFactory.getAuth().uid+'/projects/'+projectId);
-          console.log(FIREBASE_URL+'users/'+AuthenticationFactory.getAuth().uid+'/projects/'+projectId);
           var projectObj = $firebaseObject(projectRef);
           return projectObj.$loaded();
         }, //getProject
-        saveProject: function(project) {
+        saveProject: function(projectId, project) {
           var projectRef = new Firebase(FIREBASE_URL+'users/'+AuthenticationFactory.getAuth().uid+'/projects/'+projectId);
-          console.log(FIREBASE_URL+'users/'+AuthenticationFactory.getAuth().uid+'/projects/'+projectId);
           var projectObj = $firebaseObject(projectRef);
-          return projectObj.$loaded();
-        } //getProject
+
+          // define all the project attributes we want to save to the database
+          projectObj.Address = project.Address;
+          projectObj.CompanyName = project.CompanyName;
+          projectObj.Email = project.Email;
+          projectObj.Number = project.Number;
+          projectObj.PrimaryColour = project.PrimaryColour;
+          projectObj.SecondaryColour = project.SecondaryColour;
+          projectObj.SubText = project.SubText;
+          projectObj.TypographyColour = project.TypographyColour;
+          projectObj.WwwAddress = project.WwwAddress;
+          projectObj.date_created = project.date_created;
+          projectObj.imageSrc = project.imageSrc;
+          projectObj.name = project.name;
+          projectObj.date_updated = Firebase.ServerValue.TIMESTAMP;
+
+          // save the project object to the db
+          return projectObj.$save();
+        } //saveProject
       }; //myObject
 
       return myObject;
@@ -81,7 +102,18 @@
       ProjectFactory.getProject($location.search().id)
       .then(function(response) {
         $scope.project = response;
-        console.log($scope.project);
+        if ($scope.project.date_updated) {
+          $scope.updateCompanyName();
+          $scope.updateSubText();
+          $scope.updateEmail();
+          $scope.updateNumber();
+          $scope.updateWwwAddress();
+          document.getElementById('iframe').contentWindow.updatePrimaryColour($scope.project.PrimaryColour);
+          document.getElementById('iframe').contentWindow.updateSecondaryColour($scope.project.SecondaryColour);
+          document.getElementById('iframe').contentWindow.updateTypographyColour($scope.project.TypographyColour);
+          document.getElementById('iframe').contentWindow.updateAddress($scope.project.Address);
+          document.getElementById('iframe').contentWindow.updateLogo($scope.project.imageSrc);
+        }
       })
       .catch(function(error) {
         console.log("An error has occured when obtaining the users' project.");
@@ -103,7 +135,7 @@
       };
 
       $scope.getSaveDetails = function (project) {
-        ProjectFactory.saveProject(project)
+        ProjectFactory.saveProject($location.search().id, project)
         .then(function(response) {
           $scope.success = "Project saved successfully";
         })
@@ -111,19 +143,6 @@
           console.log("An error has occured when attempting to save your project.");
           $scope.error = error.message;
         });
-        // var objforsave = {};
-        // objforsave.CompanyName = $scope.CompanyName; 
-        // objforsave.SubText = $scope.SubText; 
-        // objforsave.Email = $scope.Email; 
-        // objforsave.Number = $scope.Number; 
-        // objforsave.WwwAddress = $scope.WwwAddress; 
-        // objforsave.Address = $scope.Address; 
-        // objforsave.Addressdetails = $scope.Addressdetails; 
-        // objforsave.PrimaryColour = $scope.PrimaryColour; 
-        // objforsave.SecondaryColour = $scope.SecondaryColour;
-        // objforsave.TypographyColour = $scope.TypographyColour;
-        // console.log(objforsave);
-        // alert(objforsave); // Remove this alert and use this object to save against the project for the user/ we would just neeed to find a way to load this up whne it exists already
       };
 
       $scope.getFile = function () {
@@ -203,18 +222,31 @@
     <script src="js/ngAutocomplete.js"></script>
 </head>
 <body ng-controller="myCtrl">
+  <!-- Navigation Bar-->
+  <header id="topnav">
+    <div class="container">
+      <!-- Logo container-->
+      <div class="logo">
+        <a href="/index.html">
+          <img src="../../img/logo-light.png" alt="" class="logo-light">
+          <img src="../../img/logo-dark.png" alt="" class="logo-dark">
+        </a>
+      </div>
+    </div>
+  </header>
+  <!-- End Navigation Bar-->
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <h1>{{project.name}}</h1>
+        <h1>Your site is called "{{project.name}}"</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h2>Let's build</h2>
+        <h2 ng-hide="project.date_updated">Let's build!</h2>
         <div class="row">
           <div class="col-md-6">
-            <h3>Simply choose a template, customize it with your company logo, creative colours and images. Then fill in your business's details. When you're ready, click preview to see what your mobile website will look like on different mobile phones.</h3>
+            <h3 ng-hide="project.date_updated">Simply choose a template, customise it with your company logo, creative colours and images. Then fill in your business's details. When you're ready, click preview to see what your mobile website will look like on different mobile phones.</h3>
             <form role="form">
               <div class="form-group">
                 <label for="CompanyName">
@@ -223,7 +255,7 @@
                 <input type="text" placeholder = "Your company name" ng-change="updateCompanyName()"  class="form-control" id="CompanyName" ng-model="project.CompanyName"/>
               </div>
               <div class="form-group">
-                <label for="CompanyName">
+                <label for="SubText">
                   Sub Text
                 </label>
                 <input type="text" placeholder = "A brief description of your company" ng-change="updateSubText()"  class="form-control" id="SubText" ng-model="project.SubText"/>
@@ -288,15 +320,16 @@
                   </div>
                 </p>
               </div>
-              <button type="button" class="btn btn-block" ng-click="getSaveDetails(project)">
+              <button type="button" class="btn btn-block btn-color m-0 mb-15" ng-click="getSaveDetails(project)">
                 Save
               </button> 
-              <button type="button" ng-click="DownloadIframeTemplate()"  class="btn btn-block">
+              <button type="button" ng-click="DownloadIframeTemplate()"  class="btn btn-block btn-color m-0 mb-15">
                 Download HTML files 
               </button>
-              <button type="button" class="btn btn-block">
+              <button type="button" class="btn btn-block btn-color m-0 mb-15">
                 Email HTML files 
               </button>
+              <a href="/myaccount/#/home" class="btn btn-block btn-color m-0">Back To My Account</a>
             </form>
           </div>
           <div class="col-md-6">
@@ -312,5 +345,68 @@
       </div>
     </div>
   </div>
+  <script type="text/javascript" src="../../js/main.js"></script>
+  <!-- Footer-->
+  <footer id="footer-widgets" class="footer dark">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <img src="../../img/logo-light.png">
+        </div>
+        <div class="col-md-5 ov-h">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="widget">
+                <h6 class="upper">LEARN MORE</h6>
+                <ul class="list-unstyled">
+                  <li><a href="#about">About</a></li>
+                  <li><a href="#pricing">Pricing & Plans</a></li>
+                  <li><a href="#signup">Sign up</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="widget">
+                <h6 class="upper">&nbsp;</h6>
+                <ul class="list-unstyled">
+                  <li><a href="#faq">FAQs</a></li>
+                  <li><a href="#">Hosting</a></li>
+                  <li><a href="#">Privacy policy</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="widget">
+                <h6 class="upper">&nbsp;</h6>
+                <ul class="list-unstyled">
+                  <li><a href="#">Contact us</a></li>
+                  <li><a href="#">Terms of service</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="widget">
+                <h6 class="upper">NEWSLETTER SIGN UP</h6>
+                <p>Enter your email address below to receive our newsletter</p>
+                <div class="footer-newsletter">
+                  <form data-mailchimp="true" class="inline-form">
+                    <div class="input-group">
+                      <input type="email" name="email" placeholder="Email address" class="form-control"><span class="input-group-btn"><button type="submit" data-loading-text="Loading..." class="btn btn-color">SIGN UP</button></span>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end of row-->
+    </div>
+    <!-- end of container-->
+  </footer>
 </body>
 </html>
