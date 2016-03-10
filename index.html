@@ -181,31 +181,33 @@
       };
 
       $(document).ready(function() {
-        $scope.$watch('PrimaryColour', function(newValue, oldValue) {
+        $scope.$watch('project.PrimaryColour', function(newValue, oldValue) {
+          console.log(newValue);
+          console.log(oldValue);
           if(newValue != oldValue){
             document.getElementById('iframe').contentWindow.updatePrimaryColour($scope.project.PrimaryColour);
           }
         });
 
-        $scope.$watch('SecondaryColour', function(newValue, oldValue) {
+        $scope.$watch('project.SecondaryColour', function(newValue, oldValue) {
           if(newValue != oldValue){
             document.getElementById('iframe').contentWindow.updateSecondaryColour($scope.project.SecondaryColour);
           }
         });
 
-        $scope.$watch('TypographyColour', function(newValue, oldValue) {
+        $scope.$watch('project.TypographyColour', function(newValue, oldValue) {
           if(newValue != oldValue){
             document.getElementById('iframe').contentWindow.updateTypographyColour($scope.project.TypographyColour);
           }
         });
 
-        $scope.$watch('Address', function(newValue, oldValue) {
+        $scope.$watch('project.Address', function(newValue, oldValue) {
           if(newValue != oldValue){
             document.getElementById('iframe').contentWindow.updateAddress($scope.project.Address);
           }
         });
 
-        $scope.$watch('Addressdetails', function(newValue, oldValue) {
+        $scope.$watch('project.Addressdetails', function(newValue, oldValue) {
           if(newValue !== oldValue){
           // http://maps.google.com/maps?q=24.197611,120.780512
           // console.log(newValue.geometry.location.lat())
