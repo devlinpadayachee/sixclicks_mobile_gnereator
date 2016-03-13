@@ -49,12 +49,12 @@
     angular.module('myApp').factory('ProjectFactory', ['AuthenticationFactory', 'FIREBASE_URL', '$firebaseObject', function(AuthenticationFactory, FIREBASE_URL, $firebaseObject){
       var myObject = {
         getProject: function(projectId) {
-          var projectRef = new Firebase(FIREBASE_URL+'users/'+AuthenticationFactory.getAuth().uid+'/projects/'+projectId);
+          var projectRef = new Firebase(FIREBASE_URL+'/projects/'+AuthenticationFactory.getAuth().uid+'/'+projectId);
           var projectObj = $firebaseObject(projectRef);
           return projectObj.$loaded();
         }, //getProject
         saveProject: function(projectId, project) {
-          var projectRef = new Firebase(FIREBASE_URL+'users/'+AuthenticationFactory.getAuth().uid+'/projects/'+projectId);
+          var projectRef = new Firebase(FIREBASE_URL+'projects/'+AuthenticationFactory.getAuth().uid+'/'+projectId);
           var projectObj = $firebaseObject(projectRef);
 
           // define all the project attributes we want to save to the database
