@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org" ng-app="template1app">
+  <head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+   
+  
+    
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{title}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
+
+    <!-- Custom Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.5.0/css/font-awesome.min.css" type="text/css">
+
+    <!-- Custom CSS -->
+<!--     <link rel="stylesheet" href="css/creative.css" type="text/css"> -->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript">
+
+    var  template1app = angular.module('template1app',[]);
+
+    template1app.directive('style', ['$compile', function($compile) {
+    return {
+        restrict: 'E',
+        link: function postLink(scope, element) {
+          if (element.html()) {
+            var template = $compile('<style ng-bind-template="' + element.html() + '"></style>');
+            element.replaceWith(template(scope));
+          }
+        }
+      };
+    }]);
+
+    template1app.config(['$compileProvider', function($compileProvider) {
+      $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|tel|mailto|file|javascript|geo):/);    
+    }]);
+
+
+    template1app.controller('t1Ctrl', function($scope) {
+      $scope.Logo = "img/header.jpg";
+
+      window.updateLogo = function(Logo) {
+        $scope.$apply(function(){
+          $scope.Logo = Logo;
+        });
+      };
+
+      $scope.CompanyName = "Company Name";
+
+      window.updateCompanyName = function(CompanyName) {
+        $scope.$apply(function(){
+          $scope.CompanyName = CompanyName;
+        });
+      };
+
+      $scope.SubText = "Type in some sub text which tells your customers a bit about your business";
+
+      window.updateSubText = function(SubText) {
+        $scope.$apply(function(){
+          $scope.SubText = SubText;
+        });
+      };
+
+
+      $scope.Email = "test@example.com";
+
+      window.updateEmail = function(Email) {
+        $scope.$apply(function(){
+          $scope.Email = Email;
+        });
+      };
+
+      $scope.Number = "+27 11 888 5555";
+
+      window.updateNumber = function(Number) {
+        $scope.$apply(function(){
+          $scope.Number = Number;
+        });
+      };
+
+      $scope.WwwAddress = "http://www.example.com";
+
+      window.updateWwwAddress = function(WwwAddress) {
+        $scope.$apply(function(){
+          $scope.WwwAddress = WwwAddress;
+        });
+      };
+
+      // $scope.PrimaryColour = "#fff";
+
+      window.updatePrimaryColour = function(PrimaryColour) {
+        $scope.$apply(function(){
+      
+          $scope.PrimaryColour = PrimaryColour;
+        });
+      };
+
+
+      window.updateSecondaryColour = function(SecondaryColour) {
+        $scope.$apply(function(){
+         
+          $scope.SecondaryColour = SecondaryColour;
+        });
+      };
+
+
+      window.updateTypographyColour = function(TypographyColour) {
+        $scope.$apply(function(){
+
+          $scope.TypographyColour = TypographyColour;
+        });
+      };
+
+
+      $scope.Address = "Your Physical Location";
+
+      window.updateAddress = function(Address) {
+        $scope.$apply(function(){
+          $scope.Address = Address;
+        });
+      };
+
+       window.updateMapsLocation = function(MapsLocation) {
+        $scope.$apply(function(){
+          $scope.MapsLocation = MapsLocation;
+        });
+      };
+
+    });
+    </script>
+    <style>
+      header {
+          position: relative;
+          width: 100%;
+          min-height: auto;
+          text-align: center;
+          color: #fff;
+      }
+
+      p {
+          margin-bottom: 20px;
+          font-size: 16px;
+          line-height: 1.5;
+          color: {{TypographyColour}} !important;
+      }
+
+      .PrimaryColour {
+        color: {{PrimaryColour}} !important;     
+      }
+
+      .SecondaryColour {
+        color: {{SecondaryColour}} !important;     
+      }
+
+      .TypographyColour {
+        color: {{TypographyColour}} !important;     
+      }
+
+      .backgroundsecondary{
+        background-color: {{SecondaryColour}} !important ;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      .m-0 {
+        margin: 0!important;
+      }
+      .mb-0 {
+        margin-bottom: 0!important;
+      }
+      .mt-0 {
+        margin-top: 0!important;
+      }
+      .mr-0 {
+        margin-right: 0!important;
+      }
+      .ml-0 {
+        margin-left: 0!important;
+      }
+      .mb-10 {
+        margin-bottom: 10px!important;
+      }
+      .mr-10 {
+        margin-right: 10px!important;
+      }
+      .ml-10 {
+        margin-left: 10px!important;
+      }
+      .mt-10 {
+        margin-top: 10px!important;
+      }
+      .mb-15 {
+        margin-bottom: 15px!important;
+      }
+      .mr-15 {
+        margin-right: 15px!important;
+      }
+      .ml-15 {
+        margin-left: 15px!important;
+      }
+      .mt-15 {
+        margin-top: 15px!important;
+      }
+      .mb-25 {
+        margin-bottom: 25px!important;
+      }
+      .mr-25 {
+        margin-right: 25px!important;
+      }
+      .ml-25 {
+        margin-left: 25px!important;
+      }
+      .mt-25 {
+        margin-top: 25px!important;
+      }
+      .mb-50 {
+        margin-bottom: 50px!important;
+      }
+      .mr-50 {
+        margin-right: 50px!important;
+      }
+      .ml-50 {
+        margin-left: 50px!important;
+      }
+      .mt-50 {
+        margin-top: 50px!important;
+      }
+      .p-0 {
+        padding: 0!important;
+      }
+      .pb-0 {
+        padding-bottom: 0!important;
+      }
+      .pt-0 {
+        padding-top: 0!important;
+      }
+      .pr-0 {
+        padding-right: 0!important;
+      }
+      .pl-0 {
+        padding-left: 0!important;
+      }
+      .pb-15 {
+        padding-bottom: 15px;
+      }
+      .pr-15 {
+        padding-right: 15px;
+      }
+      .pl-15 {
+        padding-left: 15px;
+      }
+      .pt-15 {
+        padding-top: 15px;
+      }
+      .pb-25 {
+        padding-bottom: 25px;
+      }
+      .pr-25 {
+        padding-right: 25px;
+      }
+      .pl-25 {
+        padding-left: 25px;
+      }
+      .pt-25 {
+        padding-top: 25px;
+      }
+      .pb-50 {
+        padding-bottom: 50px;
+      }
+      .pr-50 {
+        padding-right: 50px;
+      }
+      .pl-50 {
+        padding-left: 50px;
+      }
+      .pt-50 {
+        padding-top: 50px;
+      }
+
+      .center-image{
+        display: block;
+        margin-left: auto;
+        margin-right: auto 
+      }
+
+      .background {
+        background-color: #000;
+      }
+    </style>  
+  </head>
+
+
+<body id="page-top" ng-controller="t1Ctrl">
+
+       
+      <section id="contact" class = "backgroundsecondary p-0">
+        <div class="container">
+            <div class="row pb-25 pt-15">
+              <img title="{{title}}" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=logo&w=200&h=100" width="80%" class="center-image">
+            </div>
+            <div class="row">
+              <div class="col-xs-6 text-center">
+                <div class="col-lg-4 background">
+                    <a ng-href="tel:{{Number}}">
+                    <i class="fa fa-phone fa-4x wow bounceIn TypographyColour" data-wow-delay=".3s"></i>
+                    <p>Phone</p></a>
+                </div>
+                <div class="col-lg-4 background">
+                    <a href="mailto:{{Email}}">
+                    <i class="fa fa-envelope-o fa-4x wow bounceIn TypographyColour" data-wow-delay=".4s"></i>
+                    <p>Email</p></a>
+                </div>
+                <div class="col-lg-4 background">
+                    <a href="{{MapsLocation}}" target = "_blank" data-rel="external">
+                    <i class="fa fa-map-marker fa-4x wow bounceIn TypographyColour" data-wow-delay=".6s"></i>
+                    <p>Location</p></a>
+                </div>
+                <div class="col-lg-4 background">
+                    <a href="{{WwwAddress}}">
+                    <i class="fa fa-globe fa-4x wow fa-spin TypographyColour" data-wow-delay=".5s"></i>
+                    <p>Full Site</p></a>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <img title="{{title}}" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=logo&w=100&h=250" width="100%" class="center-image">
+              </div>
+            </div>
+        </div>
+    </section>
+  
+    <!-- jQuery -->
+    <script src="//cdn.jsdelivr.net/jquery/2.2.0/jquery.min.js"></script>
+
+    <script src="//cdn.jsdelivr.net/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+    <!-- Plugin JavaScript -->
+    <script src="//cdn.jsdelivr.net/jquery.easing/1.3/jquery.easing.1.3.min.js"></script>
+    <script src="//cdn.jsdelivr.net/fittext/1.2/jquery.fittext.js"></script>
+    <script src="//cdn.jsdelivr.net/wow/1.1.2/wow.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+   <!--  <script src="js/creative.js"></script> -->
+  
+
+</body>
+</html>
