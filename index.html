@@ -33,14 +33,19 @@
 
     angular.module('myApp').constant('FIREBASE_URL', 'https://scdev.firebaseio.com/');
 
-    angular.module('myApp').factory('AuthenticationFactory', ['FIREBASE_URL', '$firebaseAuth', function(FIREBASE_URL, $firebaseAuth){
+    angular.module('myApp').factory('AuthenticationFactory', ['FIREBASE_URL', '$firebaseAuth', '$firebaseObject', function(FIREBASE_URL, $firebaseAuth, $firebaseObject){
       var ref = new Firebase(FIREBASE_URL);
       var auth = $firebaseAuth(ref);
 
       var myObject = {
         getAuth: function() {
           return auth.$getAuth();
-        } //getAuth
+        }, //getAuth
+        getUserData: function(uid) {
+          var userRef = new Firebase(FIREBASE_URL+'users/'+uid);
+          var userObj = $firebaseObject(userRef);
+          return userObj.$loaded();
+        }
       }; //myObject
 
       return myObject;
@@ -119,11 +124,20 @@
     });
 
     angular.module('myApp').controller('myCtrl', ['$rootScope', '$scope', 'fileReader', '$window', 'AuthenticationFactory', 'ProjectFactory', '$location', function($rootScope, $scope, fileReader, $window, AuthenticationFactory, ProjectFactory, $location){
-      var authData = AuthenticationFactory.getAuth;
+      var authData = AuthenticationFactory.getAuth();
 
       if (authData == null) {
         $window.location.href = '/myaccount/#/login';
       }
+
+      AuthenticationFactory.getUserData(authData.uid)
+      .then(function(response) {
+        $scope.userData = response;
+      })
+      .catch(function(error) {
+        console.log(error.message);
+        $scope.error = "An error has occured when obtaining user data.";
+      });
 
       // console.log($location.search().id);
       ProjectFactory.getProject($location.search().id)
@@ -163,7 +177,7 @@
           saveAs(content, "example.zip");
         })
         .catch(function(error) {
-          comsole.log("error occured: "+error);
+          console.log("error occured: "+error);
         }) //a way to deduct credits for downloadable files
         
       };
@@ -368,8 +382,8 @@
               <button type="button" class="btn btn-block btn-color m-0 mb-15" ng-click="getSaveDetails(project)" ng-disabled="projectForm.$invalid">
                 Save
               </button> 
-              <button type="button" ng-click="DownloadIframeTemplate()"  class="btn btn-block btn-color m-0 mb-15" ng-disabled="projectForm.$invalid">
-                Download HTML files (costs 1 credit)
+              <button type="button" ng-click="DownloadIframeTemplate()"  class="btn btn-block btn-color m-0 mb-15" ng-disabled="(userData.credits < 1) || projectForm.$invalid">
+                Download HTML files (costs 1 credit, {{userData.credits}} available)
               </button>
               <button type="button" class="btn btn-block btn-color m-0 mb-15" ng-disabled="projectForm.$invalid">
                 Email HTML files 

@@ -63,7 +63,7 @@
         });
       };
 
-      $scope.background = "https://placeholdit.imgix.net/~text?txtsize=33&txt=logo&w=100&h=250";
+      $scope.background = "https://placeholdit.imgix.net/~text?txtsize=33&txt=bg&w=100&h=250";
 
       window.updateBackground = function(background) {
         $scope.$apply(function(){
@@ -320,22 +320,22 @@
           <div class="col-xs-6 text-center">
             <div class="col-lg-4 background">
                 <a ng-href="tel:{{number}}">
-                <i class="fa fa-phone fa-4x wow bounceIn typography-colour" data-wow-delay=".3s"></i>
+                <i class="fa fa-phone fa-2x wow bounceIn typography-colour" data-wow-delay=".3s"></i>
                 <p class="typography-colour">Phone</p></a>
             </div>
             <div class="col-lg-4 background">
                 <a href="mailto:{{email}}">
-                <i class="fa fa-envelope-o fa-4x wow bounceIn typography-colour" data-wow-delay=".4s"></i>
+                <i class="fa fa-envelope-o fa-2x wow bounceIn typography-colour" data-wow-delay=".4s"></i>
                 <p class="typography-colour">Email</p></a>
             </div>
             <div class="col-lg-4 background">
                 <a href="{{MapsLocation}}" target = "_blank" data-rel="external">
-                <i class="fa fa-map-marker fa-4x wow bounceIn typography-colour" data-wow-delay=".6s"></i>
+                <i class="fa fa-map-marker fa-2x wow bounceIn typography-colour" data-wow-delay=".6s"></i>
                 <p class="typography-colour">Location</p></a>
             </div>
             <div class="col-lg-4 background">
-                <a href="http://{{website}}">
-                <i class="fa fa-globe fa-4x wow fa-spin typography-colour" data-wow-delay=".5s"></i>
+                <a href="{{website}}">
+                <i class="fa fa-globe fa-2x wow fa-spin typography-colour" data-wow-delay=".5s"></i>
                 <p class="typography-colour">Full Site</p></a>
             </div>
           </div>
