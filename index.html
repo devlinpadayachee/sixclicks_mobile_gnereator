@@ -60,13 +60,12 @@
           // define all the project attributes we want to save to the database
           projectObj.Address = project.Address;
           projectObj.CompanyName = project.CompanyName;
-          projectObj.Email = project.Email;
-          projectObj.Number = project.Number;
+          projectObj.email = project.email;
+          projectObj.number = project.number;
           projectObj.PrimaryColour = project.PrimaryColour;
           projectObj.SecondaryColour = project.SecondaryColour;
-          projectObj.SubText = project.SubText;
           projectObj.TypographyColour = project.TypographyColour;
-          projectObj.WwwAddress = project.WwwAddress;
+          projectObj.website = project.website;
           projectObj.date_created = project.date_created;
           projectObj.imageSrc = project.imageSrc;
           projectObj.name = project.name;
@@ -106,6 +105,17 @@
       };
     });
 
+    angular.module('myApp').directive("ngFileSelect2",function(){
+      return {
+        link: function($scope,el){          
+          el.bind("change", function(e){          
+            $scope.fileBg = (e.srcElement || e.target).files[0];
+            $scope.getFileBg();
+          })
+        }
+      };
+    });
+
     angular.module('myApp').controller('myCtrl', ['$rootScope', '$scope', 'fileReader', '$window', 'AuthenticationFactory', 'ProjectFactory', '$location', function($rootScope, $scope, fileReader, $window, AuthenticationFactory, ProjectFactory, $location){
       var authData = AuthenticationFactory.getAuth;
 
@@ -119,15 +129,15 @@
         $scope.project = response;
         if ($scope.project.date_updated) {
           $scope.updateCompanyName();
-          $scope.updateSubText();
           $scope.updateEmail();
           $scope.updateNumber();
-          $scope.updateWwwAddress();
+          $scope.updateWebsite();
           document.getElementById('iframe').contentWindow.updatePrimaryColour($scope.project.PrimaryColour);
           document.getElementById('iframe').contentWindow.updateSecondaryColour($scope.project.SecondaryColour);
           document.getElementById('iframe').contentWindow.updateTypographyColour($scope.project.TypographyColour);
           document.getElementById('iframe').contentWindow.updateAddress($scope.project.Address);
-          document.getElementById('iframe').contentWindow.updateLogo($scope.project.imageSrc);
+          document.getElementById('iframe').contentWindow.updateLogo($scope.project.logo);
+          document.getElementById('iframe').contentWindow.updateLogo($scope.project.background);
         }
       })
       .catch(function(error) {
@@ -165,9 +175,19 @@
         $scope.progress = 0;
         $scope.progresswidth = 0;
         fileReader.readAsDataUrl($scope.file, $scope).then(function(result) {
-          $scope.project.imageSrc = result;
+          $scope.project.logo = result;
           // console.log(result)
-          document.getElementById('iframe').contentWindow.updateLogo($scope.project.imageSrc);
+          document.getElementById('iframe').contentWindow.updateLogo($scope.project.logo);
+        });
+      };
+
+      $scope.getFileBg = function () {
+        $scope.progressBg = 0;
+        $scope.progresswidthBg = 0;
+        fileReader.readAsDataUrl($scope.fileBg, $scope).then(function(result) {
+          $scope.project.background = result;
+          // console.log(result)
+          document.getElementById('iframe').contentWindow.updateBackground($scope.project.background);
         });
       };
 
@@ -180,20 +200,16 @@
         document.getElementById('iframe').contentWindow.updateCompanyName($scope.project.CompanyName);
       };
 
-      $scope.updateSubText = function() {
-        document.getElementById('iframe').contentWindow.updateSubText($scope.project.SubText);
-      };
-
       $scope.updateEmail = function() {
-        document.getElementById('iframe').contentWindow.updateEmail($scope.project.Email);
+        document.getElementById('iframe').contentWindow.updateEmail($scope.project.email);
       };
 
       $scope.updateNumber = function() {
-        document.getElementById('iframe').contentWindow.updateNumber($scope.project.Number);
+        document.getElementById('iframe').contentWindow.updateNumber($scope.project.number);
       };
 
-      $scope.updateWwwAddress = function() {
-        document.getElementById('iframe').contentWindow.updateWwwAddress($scope.project.WwwAddress);
+      $scope.updateWebsite = function() {
+        document.getElementById('iframe').contentWindow.updateWwwAddress($scope.project.website);
       };
 
       $(document).ready(function() {
@@ -261,65 +277,35 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h2 ng-hide="project.date_updated">Let's build!</h2>
+        <h4 ng-hide="project.date_updated">Let's build!</h4>
+        <h6 ng-hide="project.date_updated">Simply choose a template, customise it with your company logo, creative colours and images.<br>Then fill in your business's details. When you're ready, click save to save your project.</h6>
+        <hr>
         <div class="row">
           <div class="col-md-6">
-            <h3 ng-hide="project.date_updated">Simply choose a template, customise it with your company logo, creative colours and images. Then fill in your business's details. When you're ready, click save to save your project.</h3>
             <form name="projectForm" role="form">
-              <div class="form-group">
-                <label for="CompanyName">
-                  Company Name
-                </label>
-                <input type="text" placeholder = "Your company name" ng-change="updateCompanyName()"  class="form-control" id="CompanyName" ng-model="project.CompanyName" required/>
-              </div>
-              <div class="form-group">
-                <label for="SubText">
-                  Sub Text
-                </label>
-                <input type="text" placeholder = "A brief description of your company" ng-change="updateSubText()"  class="form-control" id="SubText" ng-model="project.SubText" required/>
-              </div>
-              <div class="form-group">
-                <label for="Email">
-                  Email address
-                </label>
-                <input type="email" placeholder = "mycompany@example.com" ng-change="updateEmail()" class="form-control" id="Email" ng-model="project.Email" required/>
-              </div>
-              <div class="form-group">
-                <label for="Number">
-                  Phone Number
-                </label>
-                <input type="tel" placeholder = "+27118885555" ng-change="updateNumber()" class="form-control" id="Number" ng-model="project.Number" required/>
-              </div>
-              <div class="form-group">
-                <label for="address">
-                  Address
-                </label>
-                <input type="text" class="form-control" id="Address" ng-autocomplete="project.Address" details="Addressdetails" options="Addressoptions" required/>
-              </div>
-              <div class="form-group">
-                <label for="WwwAddress">
-                  Website Address
-                </label>
-                <input type="text" placeholder = "http://www.example.com" ng-change="updateWwwAddress()" class="form-control" id="WwwAddress" ng-model="project.WwwAddress" required/>
+              <div class="col-md-12">
+                <div class="form-group col-md-4">
+                  <label>Colours</label>
+                </div>
               </div>
               <div class="col-md-12">
                 <div class="form-group col-md-4">
-                  <label for="PrimaryColour">
-                    Primary Colour
-                  </label>
                   <color-picker ng-model="project.PrimaryColour" color-picker-format="'hex'" ></color-picker>
+                  <label for="PrimaryColour">
+                    Primary
+                  </label>
                 </div>
                 <div class="form-group col-md-4">
-                  <label for="SecondaryColour">
-                    Secondary Colour
-                  </label>
                   <color-picker ng-model="project.SecondaryColour" color-picker-format="'hex'" ></color-picker>
+                  <label for="SecondaryColour">
+                    Secondary
+                  </label>
                 </div>
                 <div class="form-group col-md-4">
-                  <label for="TypographyColour">
-                    Typography Colour
-                  </label>
                   <color-picker ng-model="project.TypographyColour" color-picker-format="'hex'" ></color-picker>
+                  <label for="TypographyColour">
+                    Typography
+                  </label>
                 </div>
               </div>
               <div class="form-group">
@@ -337,6 +323,52 @@
                     </div>
                   </div>
                 </p>
+              </div>
+              <div class="form-group">
+                <label for="ImageLogo">
+                  Background Image
+                </label>
+                <input type="file" id="ImageBackground" ng-file-select-2="onFileSelect($files)" >
+                <!--  <input type="file" id="ImageLogo" ng-change="updateCompanyLogo()" ng-model="ImageLogo"/> -->
+                <p class="help-block">
+                  Upload a background image
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progressBg}}"
+                    aria-valuemin="0" aria-valuemax="1" style="{{progresswidthBg}}">
+                      {{progressBg}} Complete (success)
+                    </div>
+                  </div>
+                </p>
+              </div>
+              <div class="form-group">
+                <label for="CompanyName">
+                  Company Name
+                </label>
+                <input type="text" placeholder = "Your company name" ng-change="updateCompanyName()"  class="form-control" id="CompanyName" ng-model="project.title" required/>
+              </div>
+              <div class="form-group">
+                <label for="Email">
+                  Email address
+                </label>
+                <input type="email" placeholder = "mycompany@example.com" ng-change="updateEmail()" class="form-control" id="Email" ng-model="project.email" required/>
+              </div>
+              <div class="form-group">
+                <label for="Number">
+                  Phone Number
+                </label>
+                <input type="tel" placeholder = "+27118885555" ng-change="updateNumber()" class="form-control" id="Number" ng-model="project.number" required/>
+              </div>
+              <div class="form-group">
+                <label for="address">
+                  Address
+                </label>
+                <input type="text" class="form-control" id="Address" ng-autocomplete="project.Address" details="Addressdetails" options="Addressoptions" required/>
+              </div>
+              <div class="form-group">
+                <label for="WwwAddress">
+                  Website Address
+                </label>
+                <input type="text" placeholder = "http://www.example.com" ng-change="updateWebsite()" class="form-control" id="WwwAddress" ng-model="project.website" required/>
               </div>
               <button type="button" class="btn btn-block btn-color m-0 mb-15" ng-click="getSaveDetails(project)" ng-disabled="projectForm.$invalid">
                 Save

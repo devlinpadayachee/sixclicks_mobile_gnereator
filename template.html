@@ -54,53 +54,54 @@
     }]);
 
 
-    template1app.controller('t1Ctrl', function($scope) {
-      $scope.Logo = "img/header.jpg";
+    template1app.controller('t1Ctrl', function($scope, $rootScope) {
+      $scope.logo = "https://placeholdit.imgix.net/~text?txtsize=33&txt=logo&w=200&h=80";
 
-      window.updateLogo = function(Logo) {
+      window.updateLogo = function(logo) {
         $scope.$apply(function(){
-          $scope.Logo = Logo;
+          $scope.logo = logo;
         });
       };
 
-      $scope.CompanyName = "Company Name";
+      $scope.background = "https://placeholdit.imgix.net/~text?txtsize=33&txt=logo&w=100&h=250";
 
-      window.updateCompanyName = function(CompanyName) {
+      window.updateBackground = function(background) {
         $scope.$apply(function(){
-          $scope.CompanyName = CompanyName;
+          $scope.background = background;
         });
       };
 
-      $scope.SubText = "Type in some sub text which tells your customers a bit about your business";
+      $scope.title = "Company Name";
 
-      window.updateSubText = function(SubText) {
+      window.updateCompanyName = function(title) {
         $scope.$apply(function(){
-          $scope.SubText = SubText;
+          $scope.title = title;
+          $rootScope.title = title;
         });
       };
 
 
       $scope.Email = "test@example.com";
 
-      window.updateEmail = function(Email) {
+      window.updateEmail = function(email) {
         $scope.$apply(function(){
-          $scope.Email = Email;
+          $scope.email = email;
         });
       };
 
-      $scope.Number = "+27 11 888 5555";
+      $scope.number = "+27 11 888 5555";
 
-      window.updateNumber = function(Number) {
+      window.updateNumber = function(number) {
         $scope.$apply(function(){
-          $scope.Number = Number;
+          $scope.number = number;
         });
       };
 
-      $scope.WwwAddress = "http://www.example.com";
+      $scope.website = "http://www.example.com";
 
-      window.updateWwwAddress = function(WwwAddress) {
+      window.updateWwwAddress = function(website) {
         $scope.$apply(function(){
-          $scope.WwwAddress = WwwAddress;
+          $scope.website = website;
         });
       };
 
@@ -316,17 +317,17 @@
       <section id="contact" class = "backgroundsecondary p-0">
         <div class="container">
             <div class="row pb-25 pt-15">
-              <img title="{{title}}" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=logo&w=200&h=100" width="80%" class="center-image">
+              <img title="{{title}}" src="{{logo}}" width="80%" class="center-image">
             </div>
             <div class="row">
               <div class="col-xs-6 text-center">
                 <div class="col-lg-4 background">
-                    <a ng-href="tel:{{Number}}">
+                    <a ng-href="tel:{{number}}">
                     <i class="fa fa-phone fa-4x wow bounceIn TypographyColour" data-wow-delay=".3s"></i>
                     <p>Phone</p></a>
                 </div>
                 <div class="col-lg-4 background">
-                    <a href="mailto:{{Email}}">
+                    <a href="mailto:{{email}}">
                     <i class="fa fa-envelope-o fa-4x wow bounceIn TypographyColour" data-wow-delay=".4s"></i>
                     <p>Email</p></a>
                 </div>
@@ -336,13 +337,13 @@
                     <p>Location</p></a>
                 </div>
                 <div class="col-lg-4 background">
-                    <a href="{{WwwAddress}}">
+                    <a href="http://{{website}}">
                     <i class="fa fa-globe fa-4x wow fa-spin TypographyColour" data-wow-delay=".5s"></i>
                     <p>Full Site</p></a>
                 </div>
               </div>
               <div class="col-xs-6">
-                <img title="{{title}}" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=logo&w=100&h=250" width="100%" class="center-image">
+                <img title="{{title}}" src="{{background}}" width="100%" class="center-image">
               </div>
             </div>
         </div>
