@@ -105,31 +105,27 @@
         });
       };
 
-      // $scope.PrimaryColour = "#fff";
+      // $scope.primary_colour = "#000";
 
-      window.updatePrimaryColour = function(PrimaryColour) {
+      window.updatePrimaryColour = function(primary_colour) {
         $scope.$apply(function(){
-      
-          $scope.PrimaryColour = PrimaryColour;
+          $scope.primary_colour = primary_colour;
         });
       };
 
-
-      window.updateSecondaryColour = function(SecondaryColour) {
+      window.updateSecondaryColour = function(secondary_colour) {
         $scope.$apply(function(){
          
-          $scope.SecondaryColour = SecondaryColour;
+          $scope.secondary_colour = secondary_colour;
         });
       };
 
-
-      window.updateTypographyColour = function(TypographyColour) {
+      window.updateTypographyColour = function(typography_colour) {
         $scope.$apply(function(){
 
-          $scope.TypographyColour = TypographyColour;
+          $scope.typography_colour = typography_colour;
         });
       };
-
 
       $scope.Address = "Your Physical Location";
 
@@ -147,7 +143,14 @@
 
     });
     </script>
-    <style>
+  </head>
+
+<body id="page-top" ng-controller="t1Ctrl">
+  <style>
+      body {
+        background-color: {{primary_colour}};
+      }
+
       header {
           position: relative;
           width: 100%;
@@ -163,16 +166,16 @@
           color: {{TypographyColour}} !important;
       }
 
-      .PrimaryColour {
+      .primary-colour {
         color: {{PrimaryColour}} !important;     
       }
 
-      .SecondaryColour {
-        color: {{SecondaryColour}} !important;     
+      .secondary-colour {
+        color: {{secondary_colour}} !important;     
       }
 
-      .TypographyColour {
-        color: {{TypographyColour}} !important;     
+      .typography-colour {
+        color: {{typography_colour}} !important;     
       }
 
       .backgroundsecondary{
@@ -305,48 +308,42 @@
       }
 
       .background {
-        background-color: #000;
+        background-color: {{secondary_colour}}
       }
-    </style>  
-  </head>
-
-
-<body id="page-top" ng-controller="t1Ctrl">
-
-       
-      <section id="contact" class = "backgroundsecondary p-0">
-        <div class="container">
-            <div class="row pb-25 pt-15">
-              <img title="{{title}}" src="{{logo}}" width="80%" class="center-image">
-            </div>
-            <div class="row">
-              <div class="col-xs-6 text-center">
-                <div class="col-lg-4 background">
-                    <a ng-href="tel:{{number}}">
-                    <i class="fa fa-phone fa-4x wow bounceIn TypographyColour" data-wow-delay=".3s"></i>
-                    <p>Phone</p></a>
-                </div>
-                <div class="col-lg-4 background">
-                    <a href="mailto:{{email}}">
-                    <i class="fa fa-envelope-o fa-4x wow bounceIn TypographyColour" data-wow-delay=".4s"></i>
-                    <p>Email</p></a>
-                </div>
-                <div class="col-lg-4 background">
-                    <a href="{{MapsLocation}}" target = "_blank" data-rel="external">
-                    <i class="fa fa-map-marker fa-4x wow bounceIn TypographyColour" data-wow-delay=".6s"></i>
-                    <p>Location</p></a>
-                </div>
-                <div class="col-lg-4 background">
-                    <a href="http://{{website}}">
-                    <i class="fa fa-globe fa-4x wow fa-spin TypographyColour" data-wow-delay=".5s"></i>
-                    <p>Full Site</p></a>
-                </div>
-              </div>
-              <div class="col-xs-6">
-                <img title="{{title}}" src="{{background}}" width="100%" class="center-image">
-              </div>
-            </div>
+    </style>
+  <section id="contact" class = "backgroundsecondary p-0">
+    <div class="container">
+        <div class="row pb-25 pt-15">
+          <img title="{{title}}" src="{{logo}}" width="80%" class="center-image">
         </div>
+        <div class="row">
+          <div class="col-xs-6 text-center">
+            <div class="col-lg-4 background">
+                <a ng-href="tel:{{number}}">
+                <i class="fa fa-phone fa-4x wow bounceIn typography-colour" data-wow-delay=".3s"></i>
+                <p class="typography-colour">Phone</p></a>
+            </div>
+            <div class="col-lg-4 background">
+                <a href="mailto:{{email}}">
+                <i class="fa fa-envelope-o fa-4x wow bounceIn typography-colour" data-wow-delay=".4s"></i>
+                <p class="typography-colour">Email</p></a>
+            </div>
+            <div class="col-lg-4 background">
+                <a href="{{MapsLocation}}" target = "_blank" data-rel="external">
+                <i class="fa fa-map-marker fa-4x wow bounceIn typography-colour" data-wow-delay=".6s"></i>
+                <p class="typography-colour">Location</p></a>
+            </div>
+            <div class="col-lg-4 background">
+                <a href="http://{{website}}">
+                <i class="fa fa-globe fa-4x wow fa-spin typography-colour" data-wow-delay=".5s"></i>
+                <p class="typography-colour">Full Site</p></a>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <img title="{{title}}" src="{{background}}" width="100%" class="center-image">
+          </div>
+        </div>
+    </div>
     </section>
   
     <!-- jQuery -->

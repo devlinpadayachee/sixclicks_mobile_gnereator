@@ -58,16 +58,18 @@
           var projectObj = $firebaseObject(projectRef);
 
           // define all the project attributes we want to save to the database
-          projectObj.Address = project.Address;
-          projectObj.CompanyName = project.CompanyName;
+          projectObj.address = project.address;
+          projectObj.address_url = project.address_url;
+          projectObj.title = project.title;
           projectObj.email = project.email;
           projectObj.number = project.number;
-          projectObj.PrimaryColour = project.PrimaryColour;
-          projectObj.SecondaryColour = project.SecondaryColour;
-          projectObj.TypographyColour = project.TypographyColour;
+          projectObj.primary_colour = project.primary_colour;
+          projectObj.secondary_colour = project.secondary_colour;
+          projectObj.typography_colour = project.typography_colour;
           projectObj.website = project.website;
           projectObj.date_created = project.date_created;
-          projectObj.imageSrc = project.imageSrc;
+          projectObj.logo = project.logo;
+          projectObj.background = project.background;
           projectObj.name = project.name;
           projectObj.date_updated = Firebase.ServerValue.TIMESTAMP;
 
@@ -132,12 +134,12 @@
           $scope.updateEmail();
           $scope.updateNumber();
           $scope.updateWebsite();
-          document.getElementById('iframe').contentWindow.updatePrimaryColour($scope.project.PrimaryColour);
-          document.getElementById('iframe').contentWindow.updateSecondaryColour($scope.project.SecondaryColour);
-          document.getElementById('iframe').contentWindow.updateTypographyColour($scope.project.TypographyColour);
-          document.getElementById('iframe').contentWindow.updateAddress($scope.project.Address);
+          document.getElementById('iframe').contentWindow.updatePrimaryColour($scope.project.primary_colour);
+          document.getElementById('iframe').contentWindow.updateSecondaryColour($scope.project.secondary_colour);
+          document.getElementById('iframe').contentWindow.updateTypographyColour($scope.project.typography_colour);
+          document.getElementById('iframe').contentWindow.updateMapsLocation($scope.project.address_url);
           document.getElementById('iframe').contentWindow.updateLogo($scope.project.logo);
-          document.getElementById('iframe').contentWindow.updateLogo($scope.project.background);
+          document.getElementById('iframe').contentWindow.updateBackground($scope.project.background);
         }
       })
       .catch(function(error) {
@@ -150,14 +152,20 @@
       $scope.Addressdetails = '';
       $scope.DownloadIframeTemplate = function(){
         //Need a way to deduct credits for downloadable files 
-        ProjectFactory.subtractCredit(); //a way to deduct credits for downloadable files
-        var iframehtml = $('#iframe').contents().find("html").html();
-        // console.log(iframehtml)
-        var zip = new JSZip();
-        zip.file("index.html", iframehtml);
-        var content = zip.generate({type:"blob"});
-        // see FileSaver.js
-        saveAs(content, "example.zip");
+        ProjectFactory.subtractCredit()
+        .then(function() {
+          var iframehtml = $('#iframe').contents().find("html").html();
+          // console.log(iframehtml)
+          var zip = new JSZip();
+          zip.file("index.html", iframehtml);
+          var content = zip.generate({type:"blob"});
+          // see FileSaver.js
+          saveAs(content, "example.zip");
+        })
+        .catch(function(error) {
+          comsole.log("error occured: "+error);
+        }) //a way to deduct credits for downloadable files
+        
       };
 
       $scope.getSaveDetails = function (project) {
@@ -197,7 +205,7 @@
       });
 
       $scope.updateCompanyName = function() {
-        document.getElementById('iframe').contentWindow.updateCompanyName($scope.project.CompanyName);
+        document.getElementById('iframe').contentWindow.updateCompanyName($scope.project.title);
       };
 
       $scope.updateEmail = function() {
@@ -213,39 +221,38 @@
       };
 
       $(document).ready(function() {
-        $scope.$watch('project.PrimaryColour', function(newValue, oldValue) {
-          // console.log(newValue);
-          // console.log(oldValue);
+        $scope.$watch('project.primary_colour', function(newValue, oldValue) {
           if(newValue != oldValue){
-            document.getElementById('iframe').contentWindow.updatePrimaryColour($scope.project.PrimaryColour);
+            document.getElementById('iframe').contentWindow.updatePrimaryColour($scope.project.primary_colour);
           }
         });
 
-        $scope.$watch('project.SecondaryColour', function(newValue, oldValue) {
+        $scope.$watch('project.secondary_colour', function(newValue, oldValue) {
           if(newValue != oldValue){
-            document.getElementById('iframe').contentWindow.updateSecondaryColour($scope.project.SecondaryColour);
+            document.getElementById('iframe').contentWindow.updateSecondaryColour($scope.project.secondary_colour);
           }
         });
 
-        $scope.$watch('project.TypographyColour', function(newValue, oldValue) {
+        $scope.$watch('project.typography_colour', function(newValue, oldValue) {
           if(newValue != oldValue){
-            document.getElementById('iframe').contentWindow.updateTypographyColour($scope.project.TypographyColour);
+            document.getElementById('iframe').contentWindow.updateTypographyColour($scope.project.typography_colour);
           }
         });
 
-        $scope.$watch('project.Address', function(newValue, oldValue) {
+        $scope.$watch('project.address', function(newValue, oldValue) {
           if(newValue != oldValue){
-            document.getElementById('iframe').contentWindow.updateAddress($scope.project.Address);
+            document.getElementById('iframe').contentWindow.updateAddress($scope.project.address);
           }
         });
 
-        $scope.$watch('project.Addressdetails', function(newValue, oldValue) {
+        $scope.$watch('project.address_details', function(newValue, oldValue) {
           if(newValue !== oldValue){
-          // http://maps.google.com/maps?q=24.197611,120.780512
-          // console.log(newValue.geometry.location.lat())
-          var locationuri = "http://maps.google.com/maps?q="+newValue.geometry.location.lat()+","+newValue.geometry.location.lng()
-          // console.log(locationuri)
-          document.getElementById('iframe').contentWindow.updateMapsLocation(locationuri);
+            // http://maps.google.com/maps?q=24.197611,120.780512
+            // console.log(newValue.geometry.location.lat())
+            var locationuri = "http://maps.google.com/maps?q="+newValue.geometry.location.lat()+","+newValue.geometry.location.lng()
+            // console.log(locationuri)
+            $scope.project.address_url = locationuri;
+            document.getElementById('iframe').contentWindow.updateMapsLocation(locationuri);
           }
         });
       }); //(document).ready(function()
@@ -290,19 +297,19 @@
               </div>
               <div class="col-md-12">
                 <div class="form-group col-md-4">
-                  <color-picker ng-model="project.PrimaryColour" color-picker-format="'hex'" ></color-picker>
+                  <color-picker ng-model="project.primary_colour" color-picker-format="'hex'" ></color-picker>
                   <label for="PrimaryColour">
                     Primary
                   </label>
                 </div>
                 <div class="form-group col-md-4">
-                  <color-picker ng-model="project.SecondaryColour" color-picker-format="'hex'" ></color-picker>
+                  <color-picker ng-model="project.secondary_colour" color-picker-format="'hex'" ></color-picker>
                   <label for="SecondaryColour">
                     Secondary
                   </label>
                 </div>
                 <div class="form-group col-md-4">
-                  <color-picker ng-model="project.TypographyColour" color-picker-format="'hex'" ></color-picker>
+                  <color-picker ng-model="project.typography_colour" color-picker-format="'hex'" ></color-picker>
                   <label for="TypographyColour">
                     Typography
                   </label>
@@ -316,12 +323,6 @@
                 <!--  <input type="file" id="ImageLogo" ng-change="updateCompanyLogo()" ng-model="ImageLogo"/> -->
                 <p class="help-block">
                   Upload your companies logo
-                  <div class="progress">
-                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}"
-                    aria-valuemin="0" aria-valuemax="1" style="{{progresswidth}}">
-                      {{progress}} Complete (success)
-                    </div>
-                  </div>
                 </p>
               </div>
               <div class="form-group">
@@ -332,12 +333,6 @@
                 <!--  <input type="file" id="ImageLogo" ng-change="updateCompanyLogo()" ng-model="ImageLogo"/> -->
                 <p class="help-block">
                   Upload a background image
-                  <div class="progress">
-                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progressBg}}"
-                    aria-valuemin="0" aria-valuemax="1" style="{{progresswidthBg}}">
-                      {{progressBg}} Complete (success)
-                    </div>
-                  </div>
                 </p>
               </div>
               <div class="form-group">
@@ -362,13 +357,13 @@
                 <label for="address">
                   Address
                 </label>
-                <input type="text" class="form-control" id="Address" ng-autocomplete="project.Address" details="Addressdetails" options="Addressoptions" required/>
+                <input type="text" class="form-control" id="Address" ng-autocomplete="project.address" details="project.address_details" options="Addressoptions" ng-model="project.address" required/>
               </div>
               <div class="form-group">
                 <label for="WwwAddress">
-                  Website Address
+                  Website Address (with HTTP/HTTPS)
                 </label>
-                <input type="text" placeholder = "http://www.example.com" ng-change="updateWebsite()" class="form-control" id="WwwAddress" ng-model="project.website" required/>
+                <input type="url" placeholder = "http://www.example.com" ng-change="updateWebsite()" class="form-control" id="WwwAddress" ng-model="project.website" required/>
               </div>
               <button type="button" class="btn btn-block btn-color m-0 mb-15" ng-click="getSaveDetails(project)" ng-disabled="projectForm.$invalid">
                 Save
